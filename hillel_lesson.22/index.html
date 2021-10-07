@@ -1,10 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script defer src="./api.js"></script>
+    <script defer src="./app2.js"></script>
+    <title>Document</title>
 </head>
 <body>
-
+<div>
+    <ul class="todo-list"></ul>
+    <input class="message-input" type="text" placeholder="Your message" >
+    <button class="add-button">Send</button>
+</div>
+<script id="newTaskTemplate" type="text/template">
+    <li class="todo-item">
+        {{message}}
+        <span class="done-button">[Done]</span>
+        <span class="remove-button">[X]</span>
+    </li>
+</script>
 </body>
 </html>
