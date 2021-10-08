@@ -1,51 +1,53 @@
 const SELECTOR = Object.freeze({
-    LIST: '.todo-list',
-    INPUT: '.message-input',
-    ADD_BTN: '.add-button',
-    TODO_ITEM: '.todo-item',
-    TODO_ITEM_TEMPLATE: '#newTaskTemplate',
+    LIST: ".todo-list",
+    INPUT: ".message-input",
+    ADD_BTN: ".add-button",
+    TODO_ITEM: ".todo-item",
+    TODO_ITEM_TEMPLATE: "#newTaskTemplate"
 });
 const CLASS = Object.freeze({
-    REMOVE_BTN: 'remove-button',
-    DONE_BTN: 'done-button',
-    DONE: 'done',
+    REMOVE_BTN: "remove-button",
+    DONE_BTN: "done-button",
+    DONE: "done"
 });
 const list = document.querySelector(SELECTOR.LIST);
 const input = document.querySelector(SELECTOR.INPUT);
 const button = document.querySelector(SELECTOR.ADD_BTN);
 const todoHTML = document.querySelector(SELECTOR.TODO_ITEM_TEMPLATE).innerHTML;
 
-button.addEventListener('click', onAddTodoButtonClick);
-list.addEventListener('click', onTodoListClick);
+button.addEventListener("click", onAddTodoButtonClick);
+list.addEventListener("click", onTodoListClick);
 
 function init() {
     TodoAPI.getList()
-        .then((todoList) => addTodoList(todoList))
-        .catch((error) => alert(error.message))
+        .then((todoList) => {
+            addTodoList(todoList);
+        })
+        .catch((error) => alert(error.message));
 }
 
 init();
 
 function onAddTodoButtonClick() {
     if (!isValid(input.value)) {
-        alert('Field must be filled');
+        alert("Field must be filled");
         return;
     }
 
-    addTodo(input.value)
-    clear();
+    addTodo(input.value);
+    cleanOut();
 }
 
-function onTodoListClick (e) {
+function onTodoListClick(e) {
     const todoEl = getTodoElement(e.target);
     const classList = e.target.classList;
 
     if (e.target.classList.contains(CLASS.REMOVE_BTN)) {
-        removeTodo(todoEl).then(() => {
+        deleteTodo(todoEl).then(() => {
             TodoAPI.getList()
                 .then((todoList) => addTodoList(todoList))
                 .catch((error) => alert(error.message));
-        })
+        });
         return;
     }
     if (classList.contains(CLASS.DONE_BTN)) {
@@ -58,33 +60,37 @@ function getTodoElement(target) {
 }
 
 function isValid(message) {
-    return message !== '';
+    return message !== "";
 }
 
 function addTodoList(todoList) {
-    const html = todoList.map(todo => getTodoHTML(todo)).join('');
+    const html = todoList.map((todo) => getTodoHTML(todo)).join("");
 
     list.innerHTML = html;
 }
 
-function getTodoHTML (todo) {
+function getTodoHTML(todo) {
     return todoHTML
-        .replace('{{message}}', todo.title)
-        .replace('{{todoId}}', todo.id);
+        .replace("((message))", todo.title)
+        .replace("((todoId))", todo.id);
 }
 
-function addTodo (message) {
-    list.insertAdjacentHTML('beforeend', todoHTML.replace('{{message}}', message));
+function addTodo(message) {
+    list.insertAdjacentHTML(
+        "beforeend",
+        todoHTML.replace("((message))", message)
+    );
 }
 
-function removeTodo (el) {
-    return TodoAPI.delete(+el.dataset.id);
+function deleteTodo(el) {
+    console.log(el);
+    return TodoAPI.delete(el.id);
 }
 
 function toggleDone(el) {
     el.classList.toggle(CLASS.DONE);
 }
 
-function clear() {
-    input.value = '';
+function cleanOut() {
+    input.value = "";
 }
